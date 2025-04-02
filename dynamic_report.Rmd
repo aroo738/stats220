@@ -1,0 +1,89 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+h2 {
+color: #2d4161;
+background-color: #38d1d6;
+padding:8px;
+}
+
+h3 {
+color: #2d4161;
+background-color: #d5f0ed;
+padding:0.5px;
+}
+
+body {
+color: #2d4161;
+}
+```
+
+## Analysis of sleep data 
+
+### Nature of data: 
+This dynamic report tracks sleep data initially collected over the recent 20 days, from the 10th to the 30th of march. 
+
+### Anaysis details: 
+The data is collected to understand if participants are obtaining enough sleep and from this we can visually infer if they are obtaining enough hours so that they feel fully rested.
+
+```{r, echo=FALSE}
+library(tidyverse)
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQUMQpqaZzbLTIgv6DNXT4InOVu0JO3DY83afPsgBQhWl9DbahYnrahWTkMOstplg73_q_oMcfXA2vS/pub?output=csv")
+
+latest_data <- logged_data %>% rename(optimum = 3,
+                                      less_than_optimum = 4,
+                                      hours_of_sleep = 5)
+
+min <- min(latest_data$hours_of_sleep)
+max <- max(latest_data$hours_of_sleep)
+mean <- mean(latest_data$optimum)
+size <- length(latest_data$less_than_optimum)
+no_count <- sum(latest_data$less_than_optimum == "No")
+yes_count <- sum(latest_data$less_than_optimum == "Yes")
+
+# We can calculate the proportion of sleep obtained that was less or adequate to the optimum hours to access the quality of sleep of population of participants 
+proportion_no <- no_count/size
+proportion_yes <- yes_count/size
+
+# We can illustrate the proportion of sleep obtained through this plot
+latest_data %>%
+  ggplot() + 
+  geom_bar(aes(x = latest_data$less_than_optimum), fill = "#2fbfc4") + 
+  annotate("text", x = 1,y = 20, label = proportion_no)+
+  annotate("text", x = 2,y = 20, label = proportion_yes)+
+  labs(title = "What proportion of sleep was less than the optimum hours of sleep required", x= "Less than optimum hours", y = "Number of days", caption = "Source: Project 2 individual survey")
+
+#This plot illustrates the hours of sleep obtained and the count of how many out of the 20 days certain hours of sleep were obtained. As this data is collected on the basis of one participant we can see that the optimum hours of sleep for this individual is 9hours. However when conducted on multiple participants we can also refer from the plot the distribution of different optimum amount of sleep needed for different people.
+latest_data %>%
+  ggplot() + 
+  geom_bar(aes(x = latest_data$hours_of_sleep,fill = less_than_optimum)) +
+  labs(title = "Distribution of hours of sleep obtained", x= "Hours of sleep obtained", y = "Count", caption = "Source: Project 2 individual survey")
+
+```
+
+
+### Note: The population size of this experiment is only one participant.
+
+A larger population size would be suitable for analasis of ideal and actual sleep data of multiple people with various sleep habits. As we only have data on one participant, the optimum number of hours of sleep for this participant is the same for all data entries. 
+
+```{r, echo=FALSE}
+
+paste0("Data on the hours of sleep obtained per night was collected over ",size, " days",".")
+
+paste0("The minimum number of hours of sleep obtained was ", min, " hours and the maximum number of hours of sleep obtained was ", max," hours.")
+      
+paste0("The mean of the optimum number of hours of sleep is ", mean, ".")
+
+paste0("The proportion of days of sleep obtained which was less than the aquequate number of hours for the individual was ", proportion_no, ".")
+
+paste0("The proportion of days of sleep obtained which was equal or greater than the aquequate number of hours for the individual was ", proportion_yes, ".")
+```
+
