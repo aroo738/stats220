@@ -29,7 +29,7 @@ color: #2d4161;
 ## Analysis of sleep data 
 
 ### Nature of data: 
-This dynamic report tracks sleep data initially collected over the recent 20 days, from the 10th to the 30th of march. 
+This dynamic report tracks sleep data initially collected over the recent 20 days, from the 10th to the 30th of march. Due to dynamic nature recent data collection has been added. 
 
 ### Anaysis details: 
 The data is collected to understand if participants are obtaining enough sleep and from this we can visually infer if they are obtaining enough hours so that they feel fully rested.
@@ -57,8 +57,8 @@ proportion_yes <- yes_count/size
 latest_data %>%
   ggplot() + 
   geom_bar(aes(x = latest_data$less_than_optimum), fill = "#2fbfc4") + 
-  annotate("text", x = 1,y = 20, label = proportion_no)+
-  annotate("text", x = 2,y = 20, label = proportion_yes)+
+  annotate("text", x = 1,y = 20, label = proportion_no %>% round(2))+
+  annotate("text", x = 2,y = 20, label = proportion_yes %>% round(2))+
   labs(title = "What proportion of sleep was less than the optimum hours of sleep required", x= "Less than optimum hours", y = "Number of days", caption = "Source: Project 2 individual survey")
 
 #This plot illustrates the hours of sleep obtained and the count of how many out of the 20 days certain hours of sleep were obtained. As this data is collected on the basis of one participant we can see that the optimum hours of sleep for this individual is 9hours. However when conducted on multiple participants we can also refer from the plot the distribution of different optimum amount of sleep needed for different people.
